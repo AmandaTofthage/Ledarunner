@@ -1,0 +1,7 @@
+time,Temperature - average,MFR - continuous gas,MFR - continuous oil,MFR - bubbles,MFR - droplets,MFR - total gas,MFR - total liquid,MFR - total,Pressure
+[s],[C],[kg/s],[kg/s],[kg/s],[kg/s],[kg/s],[kg/s],[kg/s],[Pa]
+0,0,0,0,0,0,0,0,0,80
+100,0,0,40,0,0,0,40,40,732.7212601304931
+116.53813973311411,0,0,40,0,0,0,40,40,819.9076036573684
+133.05026449289866,0,0,40,0,0,0,40,40,936.0979283904144
+149.90806927145297,0,0,40,0,0,0,40,40,1369.5482012425393

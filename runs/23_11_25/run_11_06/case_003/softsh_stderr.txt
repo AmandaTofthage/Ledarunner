@@ -1,0 +1,7 @@
+***  Initialising the KOGT R LMS v. 2.11  ***
+Using connection profile "MariaDB"
+
+Creating new case, uuid = 756101f9-51d4-4362-8e70-456d7dd7e31c
+...
+UUID: 756101f9-51d4-4362-8e70-456d7dd7e31c
+CASE_DIR: undefined

@@ -1,0 +1,30 @@
+{
+    "mode": "Parameter Study",
+    "base_inputs": {
+        "SOURCE_TIME": [
+            0
+        ],
+        "SOURCE_MFR": 46.0,
+        "SOURCE_TEMP_K": 273.15,
+        "VALVE_TIME": [
+            0
+        ],
+        "VALVE_OPENING": 0.22,
+        "WH_TIME": [
+            0
+        ],
+        "WH_PRESS": 8000000.0,
+        "WH_TEMP_K": 277.15
+    },
+    "varying_parameters": {
+        "SOURCE_MFR": [
+            10.0,
+            20.0,
+            30.0,
+            40.0,
+            50.0
+        ]
+    },
+    "total_combinations": 5,
+    "dynamic_time": 3600.0
+}

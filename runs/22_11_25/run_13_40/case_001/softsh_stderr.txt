@@ -1,0 +1,8 @@
+***  Initialising the KOGT R LMS v. 2.11  ***
+Using connection profile "MariaDB"
+
+Creating new case, uuid = d4ef1875-1bc4-4bc7-b891-40902fd29f1a
+...
+Logger property ( "Wall temperature - inner surface" ) ignored.
+UUID: d4ef1875-1bc4-4bc7-b891-40902fd29f1a
+CASE_DIR: undefined

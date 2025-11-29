@@ -1,0 +1,5 @@
+time,MFR - total gas,MFR - total oil,MFR - total liquid,MFR - total,Opening fraction,Pressure (inlet),Pressure (outlet),Pressure drop
+[s],[kg/s],[?],[kg/s],[kg/s],[-],[Pa],[Pa],[Pa]
+0,0,0,0,0,0,80,80,0
+108.40974739225719,0,0,0,0,0,380.98747295550083,80.00000038171925,300.9874725737816
+215.05479694997214,0,0,0,0,0,720.0898107836343,80.00000029198382,640.0898104916505
