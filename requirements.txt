@@ -1,0 +1,9 @@
+# --- Core UI Framework ---
+streamlit>=1.33.0
+
+# --- Data Handling & Parsing ---
+pandas>=2.1.0
+numpy>=1.26.0
+
+# --- Plotting ---
+plotly>=5.20.0

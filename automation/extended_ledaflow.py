@@ -27,15 +27,15 @@ class ExtendedLedaFlow(LedaFlow):
         "Time step": "s",
         
         # Pressure
-        "Pressure": "Pa",
-        "Pressure drop": "Pa",
-        "Pressure drop - total": "Pa",
-        "Pressure drop - gravity": "Pa",
-        "Pressure drop - friction": "Pa",
-        "Pressure Left": "Pa",
-        "Pressure Right": "Pa",
-        "Pressure (inlet)": "Pa",
-        "Pressure (outlet)": "Pa",
+        "Pressure": "Bar",
+        "Pressure drop": "Bar",
+        "Pressure drop - total": "Bar",
+        "Pressure drop - gravity": "Bar",
+        "Pressure drop - friction": "Bar",
+        "Pressure Left": "Bar",
+        "Pressure Right": "Bar",
+        "Pressure (inlet)": "Bar",
+        "Pressure (outlet)": "Bar",
         
         # Temperature
         "Temperature": "C",
