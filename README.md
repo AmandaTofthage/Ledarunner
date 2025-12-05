@@ -54,54 +54,53 @@ Ledarunner/
 
 ## System Architecture
 Below is a simplified flow of how the system works: 
-```
-┌──────────────────┐
-│  Streamlit GUI   │ 
-└─────────┬────────┘
-          │
-   collects user inputs
-          ▼
-┌────────────────────────────────┐
-│   simulation_pipeline.py       │
-│   (Workflow Orchestrator)      │
-└───────────┬────────────────────┘
-            │               
-            ▼               
-┌────────────────────┐  
-│ template_engine.py │   
-│  (Build final QS)  │   
-└──────────┬─────────┘   
-           │                     
-           ▼ 
-       model.qs              
-           │                     
-           ▼ 
-┌──────────────────────────┐  
-│      run_softsh.py       │   
-│(Loads QS into LedaFlow)  │   
-└─────────────┬────────────┘   
-              │                     
-              ▼ 
-┌────────────────────┐  
-│ LedaFlow API       │   
-│ (Run Simulation)   │   
-└──────────┬─────────┘   
-           │
-           ▼
-    Simulation Output Files
-    (trends/ & profiles/)
-            │
-            ▼
-┌───────────────────────────────────┐
-│  simulation_pipeline.py (parsers) │
-└───────────────┬───────────────────┘
-                ▼
-         Parsed DataFrames
-                ▼
-      ┌────────────────────┐
-      │ Streamlit Visuals  │
-      │ Trends / Profiles  │
-      └────────────────────┘
+
+```mermaid
+flowchart TD
+
+    %% --- TOP: GUI ---
+    GUI["Streamlit GUI<br/>(Collects user inputs)"]
+
+    %% --- CORE PIPELINE ---
+    PIPE["simulation_pipeline.py (Core)<br/>Workflow Orchestration Logic"]
+
+    GUI --> PIPE
+
+    %% --- SUBMODULES ---
+    RESULT["Result Folder Creation<br/>- Timestamped directory<br/>- Save inputs.json<br/>- Prepare trends/ & profiles/ folders"]
+    TEMP["template_engine.py<br/>- Generate model.qs from user inputs"]
+    JS["SoftSH Script Builder<br/>- Generate run_case.js<br/>- Load QS file<br/>- Return case UUID"]
+
+    PIPE --> RESULT
+    PIPE --> TEMP
+    PIPE --> JS
+
+    %% --- RUN EXECUTION ---
+    RUN["simulation_pipeline.py<br/>- Run simulation via SoftSH<br/>- Select LedaFlow case via UUID"]
+
+    RESULT --> RUN
+    TEMP --> RUN
+    JS --> RUN
+
+    %% --- LEDAFLOW ---
+    LF["LedaFlow Engineering<br/>(Transient Multiphase Solver)"]
+    RUN --> LF
+
+    TXT1["Initializes steady-state preprocessor<br/>and runs transient simulation"]
+    LF --> TXT1
+
+    %% --- RESULT PARSING ---
+    PARSE["extended_ledaflow.py<br/>Result Parsing Subsystem<br/>- Export trend & profile CSVs<br/>- Use LedaFlow API for data"]
+
+    TXT1 --> PARSE
+
+    TXT2["Load CSVs into pandas DataFrames"]
+    PARSE --> TXT2
+
+    %% --- VISUALIZATION ---
+    VIZ["Streamlit Visualization Layer<br/>- Trend plots<br/>- Profiles<br/>- Multi-case comparisons"]
+
+    TXT2 --> VIZ
 ```
 
 ## Key Features
