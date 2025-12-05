@@ -59,7 +59,7 @@ Below is a simplified flow of how the system works:
 flowchart TD
 
     %% Plain text class
-    classDef text fill=none,stroke=none,color=#444,font-size:14px;
+     classDef text fill:none stroke:none color:#444;
 
     %% --- Streamlit GUI ---
     GUI["Streamlit GUI"]
