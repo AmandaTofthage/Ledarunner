@@ -54,22 +54,16 @@ Ledarunner/
 
 ## System Architecture
 Below is a simplified flow of how the system works: 
-
 ```mermaid
 flowchart TD
 
-    %% CLASS WITH NO BOX (TEXT ONLY)
-    classDef nobox fill:none stroke:none color:#444;
-
     %% --- Streamlit GUI ---
     GUI["Streamlit GUI"]
-    GUITXT["Collects user inputs"]:::nobox
-
-    GUI --> GUITXT
 
     %% --- Workflow orchestrator ---
     PIPE["simulation_pipeline.py (Core)<br/>Workflow Orchestration Logic"]
-    GUITXT --> PIPE
+    
+    GUI -->|Collects user inputs| PIPE
 
 
     %% --- Three subsystems under PIPE ---
@@ -92,25 +86,21 @@ flowchart TD
 
     %% --- LEDAFLOW ENGINE ---
     LF["LedaFlow Engineering<br/>Transient Multiphase Solver"]
-    TXT1["Initializes steady-state preprocessor<br/>and runs dynamic simulation"]:::nobox
 
     RUN --> LF
-    LF --> TXT1
 
 
     %% --- RESULT PARSING ---
     PARSE["extended_ledaflow.py (Result Parsing Subsystem)<br/>- Export trend/profile data to CSV<br/>- Use LedaFlow API to collect data"]
-    TXT2["Loads CSV files into pandas DataFrames<br/>for visualization"]:::nobox
 
-    TXT1 --> PARSE
-    PARSE --> TXT2
+    LF -->|Initializes steady-state preprocessor<br/>and runs dynamic simulation| PARSE
 
 
     %% --- VISUALIZATION ---
     VIZ["Streamlit Visualization Layer<br/>- Trend plots<br/>- Profile plots<br/>- Multi-case comparisons"]
 
-    TXT2 --> VIZ
-
+    PARSE -->|Loads CSV files into pandas DataFrames<br/>for visualization| VIZ
+```
 
 ```
 
