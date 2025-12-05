@@ -58,12 +58,12 @@ Below is a simplified flow of how the system works:
 ```mermaid
 flowchart TD
 
-    %% Plain text class
-     classDef text fill:none stroke:none color:#444;
+    %% CLASS WITH NO BOX (TEXT ONLY)
+    classDef nobox fill:none stroke:none color:#444;
 
     %% --- Streamlit GUI ---
     GUI["Streamlit GUI"]
-    GUITXT["Collects user inputs"]:::text
+    GUITXT["Collects user inputs"]:::nobox
 
     GUI --> GUITXT
 
@@ -73,9 +73,9 @@ flowchart TD
 
 
     %% --- Three subsystems under PIPE ---
-    RESULT["Result Folder Creation<br/>-- Create timestamped directory<br/>-- Save inputs.json<br/>-- Prepare trends/ and profiles/ folders"]
-    TEMP["template_engine.py<br/>-- Generates model.qs from user input"]
-    JS["SoftSH Script Builder<br/>-- Generate run_case.js<br/>-- Load QS file<br/>-- Return case UUID"]
+    RESULT["Result Folder Creation<br/>- Create timestamped directory<br/>- Save inputs.json<br/>- Prepare trends/ and profiles/ folders"]
+    TEMP["template_engine.py<br/>- Generates model.qs from user input"]
+    JS["SoftSH Script Builder<br/>- Generate run_case.js<br/>- Load QS file<br/>- Return case UUID"]
 
     PIPE --> RESULT
     PIPE --> TEMP
@@ -83,7 +83,7 @@ flowchart TD
 
 
     %% --- RUN EXECUTION ---
-    RUN["simulation_pipeline.py (Run Phase)<br/>-- Run simulation via SoftSH<br/>-- Selects LedaFlow case via UUID"]
+    RUN["simulation_pipeline.py (Run Phase)<br/>- Run simulation via SoftSH<br/>- Selects LedaFlow case via UUID"]
 
     RESULT --> RUN
     TEMP --> RUN
@@ -92,22 +92,22 @@ flowchart TD
 
     %% --- LEDAFLOW ENGINE ---
     LF["LedaFlow Engineering<br/>Transient Multiphase Solver"]
-    TXT1["Initializes steady-state preprocessor<br/>and runs dynamic simulation"]:::text
+    TXT1["Initializes steady-state preprocessor<br/>and runs dynamic simulation"]:::nobox
 
     RUN --> LF
     LF --> TXT1
 
 
     %% --- RESULT PARSING ---
-    PARSE["extended_ledaflow.py (Result Parsing Subsystem)<br/>-- Export trend/profile data to CSV<br/>-- Use LedaFlow API to collect data"]
-    TXT2["Loads CSV files into pandas DataFrames<br/>for visualization"]:::text
+    PARSE["extended_ledaflow.py (Result Parsing Subsystem)<br/>- Export trend/profile data to CSV<br/>- Use LedaFlow API to collect data"]
+    TXT2["Loads CSV files into pandas DataFrames<br/>for visualization"]:::nobox
 
     TXT1 --> PARSE
     PARSE --> TXT2
 
 
     %% --- VISUALIZATION ---
-    VIZ["Streamlit Visualization Layer<br/>-- Trend plots<br/>-- Profile plots<br/>-- Multi-case comparisons"]
+    VIZ["Streamlit Visualization Layer<br/>- Trend plots<br/>- Profile plots<br/>- Multi-case comparisons"]
 
     TXT2 --> VIZ
 
