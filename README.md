@@ -67,40 +67,45 @@ flowchart TD
     GUI --> PIPE
 
     %% --- SUBMODULES ---
-    RESULT["Result Folder Creation<br/>- Timestamped directory<br/>- Save inputs.json<br/>- Prepare trends/ & profiles/ folders"]
-    TEMP["template_engine.py<br/>- Generate model.qs from user inputs"]
-    JS["SoftSH Script Builder<br/>- Generate run_case.js<br/>- Load QS file<br/>- Return case UUID"]
+    RESULT["Result Folder Creation"]
+    TEMP["template_engine.py"]
+    JS["SoftSH Script Builder"]
 
     PIPE --> RESULT
     PIPE --> TEMP
     PIPE --> JS
 
+    %% --- Descriptions for submodules ---
+    RESULT -.->|"- Creates timestamped directory<br/>- Saves inputs.json<br/>- Prepares trends/ & profiles folders"| RESULT
+    TEMP -.->|"Generates model.qs from user inputs"| TEMP
+    JS -.->|"- Generates run_case.js<br/>- Loads QS file<br/>- Returns case UUID"| JS
+
     %% --- RUN EXECUTION ---
-    RUN["simulation_pipeline.py<br/>- Run simulation via SoftSH<br/>- Select LedaFlow case via UUID"]
+    RUN["simulation_pipeline.py<br/>Run Phase"]
 
     RESULT --> RUN
     TEMP --> RUN
     JS --> RUN
 
-    %% --- LEDAFLOW ---
+    %% --- LEDAFLOW ENGINE ---
     LF["LedaFlow Engineering<br/>(Transient Multiphase Solver)"]
-    RUN --> LF
 
-    TXT1["Initializes steady-state preprocessor<br/>and runs transient simulation"]
-    LF --> TXT1
+    RUN -->|"Initializes steady-state preprocessor<br/>and runs transient simulation"| LF
 
     %% --- RESULT PARSING ---
-    PARSE["extended_ledaflow.py<br/>Result Parsing Subsystem<br/>- Export trend & profile CSVs<br/>- Use LedaFlow API for data"]
+    PARSE["extended_ledaflow.py<br/>Result Parsing Subsystem"]
 
-    TXT1 --> PARSE
+    LF --> PARSE
 
-    TXT2["Load CSVs into pandas DataFrames"]
-    PARSE --> TXT2
+    PARSE -->|"Exports trend & profile CSVs<br/>Uses LedaFlow API to collect data"| PARSE
+
+    PARSE -->|"Loads CSVs into pandas DataFrames"| PARSE
 
     %% --- VISUALIZATION ---
-    VIZ["Streamlit Visualization Layer<br/>- Trend plots<br/>- Profiles<br/>- Multi-case comparisons"]
+    VIZ["Streamlit Visualization Layer"]
 
-    TXT2 --> VIZ
+    PARSE -->|"Trend plots<br/>Profile plots<br/>Multi-case comparisons"| VIZ
+
 ```
 
 ## Key Features
