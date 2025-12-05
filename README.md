@@ -58,53 +58,59 @@ Below is a simplified flow of how the system works:
 ```mermaid
 flowchart TD
 
-    %% --- TOP: GUI ---
-    GUI["Streamlit GUI<br/>(Collects user inputs)"]
+    %% Plain text class
+    classDef text fill=none,stroke=none,color=#444,font-size:14px;
 
-    %% --- CORE PIPELINE ---
+    %% --- Streamlit GUI ---
+    GUI["Streamlit GUI"]
+    GUITXT["Collects user inputs"]:::text
+
+    GUI --> GUITXT
+
+    %% --- Workflow orchestrator ---
     PIPE["simulation_pipeline.py (Core)<br/>Workflow Orchestration Logic"]
+    GUITXT --> PIPE
 
-    GUI --> PIPE
 
-    %% --- SUBMODULES ---
-    RESULT["Result Folder Creation"]
-    TEMP["template_engine.py"]
-    JS["SoftSH Script Builder"]
+    %% --- Three subsystems under PIPE ---
+    RESULT["Result Folder Creation<br/>-- Create timestamped directory<br/>-- Save inputs.json<br/>-- Prepare trends/ and profiles/ folders"]
+    TEMP["template_engine.py<br/>-- Generates model.qs from user input"]
+    JS["SoftSH Script Builder<br/>-- Generate run_case.js<br/>-- Load QS file<br/>-- Return case UUID"]
 
     PIPE --> RESULT
     PIPE --> TEMP
     PIPE --> JS
 
-    %% --- Descriptions for submodules ---
-    RESULT -.->|"- Creates timestamped directory<br/>- Saves inputs.json<br/>- Prepares trends/ & profiles folders"| RESULT
-    TEMP -.->|"Generates model.qs from user inputs"| TEMP
-    JS -.->|"- Generates run_case.js<br/>- Loads QS file<br/>- Returns case UUID"| JS
 
     %% --- RUN EXECUTION ---
-    RUN["simulation_pipeline.py<br/>Run Phase"]
+    RUN["simulation_pipeline.py (Run Phase)<br/>-- Run simulation via SoftSH<br/>-- Selects LedaFlow case via UUID"]
 
     RESULT --> RUN
     TEMP --> RUN
     JS --> RUN
 
-    %% --- LEDAFLOW ENGINE ---
-    LF["LedaFlow Engineering<br/>(Transient Multiphase Solver)"]
 
-    RUN -->|"Initializes steady-state preprocessor<br/>and runs transient simulation"| LF
+    %% --- LEDAFLOW ENGINE ---
+    LF["LedaFlow Engineering<br/>Transient Multiphase Solver"]
+    TXT1["Initializes steady-state preprocessor<br/>and runs dynamic simulation"]:::text
+
+    RUN --> LF
+    LF --> TXT1
+
 
     %% --- RESULT PARSING ---
-    PARSE["extended_ledaflow.py<br/>Result Parsing Subsystem"]
+    PARSE["extended_ledaflow.py (Result Parsing Subsystem)<br/>-- Export trend/profile data to CSV<br/>-- Use LedaFlow API to collect data"]
+    TXT2["Loads CSV files into pandas DataFrames<br/>for visualization"]:::text
 
-    LF --> PARSE
+    TXT1 --> PARSE
+    PARSE --> TXT2
 
-    PARSE -->|"Exports trend & profile CSVs<br/>Uses LedaFlow API to collect data"| PARSE
-
-    PARSE -->|"Loads CSVs into pandas DataFrames"| PARSE
 
     %% --- VISUALIZATION ---
-    VIZ["Streamlit Visualization Layer"]
+    VIZ["Streamlit Visualization Layer<br/>-- Trend plots<br/>-- Profile plots<br/>-- Multi-case comparisons"]
 
-    PARSE -->|"Trend plots<br/>Profile plots<br/>Multi-case comparisons"| VIZ
+    TXT2 --> VIZ
+
 
 ```
 
