@@ -101,7 +101,7 @@ var LOGGER2 = new LEDA_LOGGER("Global","LedaImplicitNetwork");
 
 var LOGGER3 = new LEDA_LOGGER("Flowline","Flowline");
   LOGGER3.position   = 0;
-  LOGGER3.properties = "Compositional mass fractions,Elevation profile,Heat transfer coefficients,Mass flow rate,Physical regime id,Pressure,Superficial velocities,Temperature,Temperature - average,Temperature - surroundings,Velocities,Volume fraction,Wall temperature - inner surface";
+  LOGGER3.properties = "Compositional mass fractions,Densities,Elevation profile,Heat transfer coefficients,Mass flow rate,Physical regime id,Pressure,Superficial velocities,Temperature,Temperature - average,Temperature - surroundings,Velocities,Volume fraction,Wall temperature - inner surface";
   LOGGER3.type       = "Profile";
 
 var LOGGER4 = new LEDA_LOGGER("Valve","Valve");

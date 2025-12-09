@@ -309,9 +309,9 @@ class ExtendedLedaFlow(LedaFlow):
         output_dir.mkdir(parents=True, exist_ok=True)
 
         loggers = self.safe_available_trends()
-        # Filter out Global logger to speed up exports
-        loggers = [l for l in loggers if l != "Global"]
-        print(f"> Found {len(loggers)} trend loggers (excluding Global)")
+        # Filter out Global and Flowline (Trend) loggers to speed up exports
+        loggers = [l for l in loggers if l not in ["Global", "Flowline (Trend)"]]
+        print(f"> Found {len(loggers)} trend loggers (excluding Global and Flowline (Trend))")
 
         for logger in loggers:
             try:

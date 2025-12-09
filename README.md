@@ -30,10 +30,11 @@ All simulations, including generation of input files, running transient calculat
 ## Repository Structure
 ```
 Ledarunner/
-├── README.md                       # This file - project documentation
+├── README.md                       # Project documentation
 ├── LedaFlow.py                     # LedaFlow API wrapper (from installation)
 ├── gui_app.py                      # Streamlit GUI for automation & visualization
 ├── requirements.txt                # Python dependencies
+├── thesis_results_creation/        # Jupyter notebooks and generated plots for thesis
 │           
 ├── cases/                         
 │   ├── CO2_pipe.qs                 # Base LedaFlow model 

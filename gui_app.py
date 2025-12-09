@@ -161,8 +161,18 @@ if mode == "Single Case":
             time_points_str = st.text_input("Time intervals [s]", "0,600,1200", key="valve_time_points")
             time_points = [float(t.strip()) for t in time_points_str.split(",") if t.strip()]
 
-            valve_values_str = st.text_input("Valve Opening [-]", "0.2,0.4,0.6", key="valve_values")
+            valve_values_str = st.text_input("Valve Opening [-]", "0.2,0.4,0.6", key="valve_values", 
+                                             help="Values must be between 0 (fully closed) and 1 (fully open)")
             valve_values = [float(v.strip()) for v in valve_values_str.split(",") if v.strip()]
+            
+            # Validate valve opening range
+            if any(v < 0 or v > 1 for v in valve_values):
+                st.error("❌ Valve opening values must be between 0 and 1")
+                st.stop()
+            
+            # Warn if starting with fully closed valve
+            if valve_values[0] == 0:
+                st.warning("⚠️ Valve starts fully closed (0.0). This may prevent flow and cause simulation issues.")
             
             valve_values = validate_timeseries("Valve Opening", time_points, valve_values)
             inputs["Valve_opening"] = list(zip(time_points, valve_values))
@@ -307,7 +317,7 @@ st.session_state.inputs = inputs
 # Simulation Duration 
 st.session_state.DYNAMIC_TIME = st.sidebar.text_input( 
     "Simulation duration [s]", str(DYNAMIC_TIME), 
-    help="Defines how long the transient simulation will run" )
+    help="Defines how long the transient simulation will run. Must be longer than all time-series data points." )
 
 if mode == "Single Case":
     # Preview of inputs
@@ -351,6 +361,27 @@ run_clicked = st.sidebar.button("Run Simulation", width='stretch', type="primary
 # ------------------------------------------------
 
 if run_clicked:
+    # Validate simulation duration against time-series inputs
+    try:
+        sim_duration = float(st.session_state.DYNAMIC_TIME)
+    except:
+        st.error("❌ Invalid simulation duration. Please enter a valid number.")
+        st.stop()
+    
+    # Check if any time-series exceed simulation duration
+    max_times = []
+    if mode == "Single Case":
+        for key, val in inputs.items():
+            if isinstance(val, list) and val and isinstance(val[0], tuple):
+                max_times.append((key, max(t for t, _ in val)))
+    
+    if max_times:
+        max_time_key, max_time_val = max(max_times, key=lambda x: x[1])
+        if max_time_val > sim_duration:
+            st.error(f"❌ Time-series '{max_time_key}' extends to {max_time_val}s, but simulation duration is only {sim_duration}s. "
+                    f"Increase simulation duration to at least {max_time_val}s or reduce time-series range.")
+            st.stop()
+    
     with st.spinner("Running simulation... Please wait."):
         
         lf = st.session_state.lf 
@@ -654,7 +685,7 @@ if mode == "Single Case" and st.session_state.visualization_ready:
                         3) Click "Add another logger" below to visualize variables from multiple loggers
                         """)
 
-            logger_names = sorted([k for k in trend_files.keys() if k != "Global"])
+            logger_names = sorted([k for k in trend_files.keys() if k not in ["Global", "Flowline (Trend)"]])
        
             # Initialize counter for logger plot container
             if "trend_plot_count" not in st.session_state:
@@ -958,7 +989,7 @@ if mode == "Parameter Study" and "study_results" in st.session_state:
                             3) Click "Add another logger" below to visualize variables from multiple loggers
                             """)
 
-                logger_names = sorted([k for k in trend_data.keys() if k != "Global"])
+                logger_names = sorted([k for k in trend_data.keys() if k not in ["Global", "Flowline (Trend)"]])
 
                 # Initialize counter for logger plot container (parameter-study scoped)
                 if "ps_trend_plot_count" not in st.session_state:
@@ -1167,7 +1198,7 @@ if mode == "Parameter Study" and "study_results" in st.session_state:
             st.session_state.metrics_open = False
         
         with st.expander("Case Metrics Overview", expanded=st.session_state.metrics_open):
-            logger_for_metrics = st.selectbox("Select logger for metrics:", sorted([k for k in common_loggers if k != "Global"]), key="metrics_logger_select")
+            logger_for_metrics = st.selectbox("Select logger for metrics:", sorted([k for k in common_loggers if k not in ["Global", "Flowline (Trend)"]]), key="metrics_logger_select")
 
             # Determine common variables (exclude time)
             vars_common = set.intersection(
@@ -1194,10 +1225,10 @@ if mode == "Parameter Study" and "study_results" in st.session_state:
                                     r[f"{v} - mean"] = None
                                     r[f"{v} - std"] = None
                                 else:
-                                    r[f"{v} - min"] = float(arr.min())
-                                    r[f"{v} - max"] = float(arr.max())
-                                    r[f"{v} - mean"] = float(arr.mean())
-                                    r[f"{v} - std"] = float(arr.std())
+                                    r[f"{v} - min"] = round(float(arr.min()), 2)
+                                    r[f"{v} - max"] = round(float(arr.max()), 2)
+                                    r[f"{v} - mean"] = round(float(arr.mean()), 2)
+                                    r[f"{v} - std"] = round(float(arr.std()), 2)
                             except Exception:
                                 r[f"{v} - min"] = None
                                 r[f"{v} - max"] = None
@@ -1222,7 +1253,7 @@ if mode == "Parameter Study" and "study_results" in st.session_state:
                 st.session_state.compare_trend_plot_count = 1
 
             for sec_idx in range(1, st.session_state.compare_trend_plot_count + 1):
-                logger_sel = st.selectbox(f"Logger:", sorted([k for k in common_loggers if k != "Global"]), key=f"compare_logger_{sec_idx}")
+                logger_sel = st.selectbox(f"Logger:", sorted([k for k in common_loggers if k not in ["Global", "Flowline (Trend)"]]), key=f"compare_logger_{sec_idx}")
 
                 # compute available variables for this logger across selected cases
                 vars_available = set.intersection(*[set(all_trends[label][logger_sel].columns) for label in selected_labels])
