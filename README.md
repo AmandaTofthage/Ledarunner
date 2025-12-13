@@ -13,7 +13,7 @@ This repository contains the complete Python workflow used to run LedaFlow simul
 
 ## Overview
 
-This repository implements the **LedaRunner**, a modular automation framework built around:
+This repository implements the **CaseRunner**, a modular automation framework built around:
 - A QS templating system for programmatic manipulation of LedaFlow input files
 - Automated single simulations and parameter studies
 - A Python/Streamlit web interface for defining input parameters, running cases, and visualizing results
@@ -29,7 +29,7 @@ All simulations, including generation of input files, running transient calculat
 
 ## Repository Structure
 ```
-Ledarunner/
+Caserunner/
 ├── README.md                       # Project documentation
 ├── LedaFlow.py                     # LedaFlow API wrapper (from installation)
 ├── gui_app.py                      # Streamlit GUI for automation & visualization
@@ -103,7 +103,6 @@ flowchart TD
     PARSE -->|Loads CSV files into pandas DataFrames<br/>for visualization| VIZ
 ```
 
-```
 
 ## Key Features
 

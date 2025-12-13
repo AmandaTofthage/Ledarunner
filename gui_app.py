@@ -29,8 +29,8 @@ from automation.extended_ledaflow import ExtendedLedaFlow
 
 # --- USER CONFIG -------------------------------------------------------------
 LEDAFLOW_VERSION = "2.11.271.018"
-TEMPLATE_QS_PATH = Path(r"C:/Users/amand/Documents/Prosjektoppgave/Ledarunner/cases/template.qs")
-RESULTS_DIR = Path(r"C:/Users/amand/Documents/Prosjektoppgave/Ledarunner/runs")
+TEMPLATE_QS_PATH = Path(r"cases/template.qs")
+RESULTS_DIR = Path(r"runs")
 DYNAMIC_TIME = 3600
 # -----------------------------------------------------------------------------
 
@@ -55,7 +55,7 @@ if "visualization_ready" not in st.session_state:
 
 # --- PAGE SETUP / GUI LAYOUT ---
 st.set_page_config(page_title="LedaFlow CO₂ Simulator", layout="wide")
-st.title("LedaRunner - Automated execution and analysis of LedaFlow simulations")
+st.title("CaseRunner - Automated execution and analysis of LedaFlow simulations")
 st.markdown("Run, monitor and analyze LedaFlow simulations in one place!")
 
     
